@@ -13,7 +13,8 @@ var UserSchema = new schema({
     username:{
     type:String,
     required:[true,'First Name field is required!'],
-    maxlength:100
+    maxlength:100,
+    unique:true
 },
 
 email:{
@@ -26,13 +27,21 @@ password:{
     type:String,
     minlength:5,
     required:[true,'Password field is required!'],
+},
+
+vehicle_type:{
+    type:String,
+    required:[true,'vehicle type field is required!'],
+   
+ },
+
+fuel_type:{
+    type:String,
+    required:[true,'vehicle type field is required!'],
     
 },
-role:{
-    type:String,
-    enum:UserRole,
-    default:UserRole.CAMPER
-},
+    
+
 
 create_date:{
     type:Date,

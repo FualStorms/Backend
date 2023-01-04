@@ -1,7 +1,7 @@
 const UserRole = {
     ADMIN:'ADMIN',
-    CAMPER:'CUSTOMER',
-    CAMPINGSITEOWNER:'STATION'
+    USER:'USER',
+    STATION:'STATION'
 }
 
 module.exports = Object.freeze(UserRole);

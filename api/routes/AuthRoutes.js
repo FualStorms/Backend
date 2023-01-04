@@ -6,6 +6,9 @@ module.exports = function(app){
     app.post("/register",AuthController.registerUser);
     app.post("/login",AuthController.loginUser);
     
+    app.post("/registerStation",AuthController.registerStation);
+    app.post("/loginStation",AuthController.loginStation);
+    
     
  
  
