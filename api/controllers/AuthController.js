@@ -1,130 +1,102 @@
 const {User} = require("../models/UserModel");
 const{Station} =require("../models/StationModel");
+const jwt = require('jsonwebtoken');
 
 //user registration
 
-exports.registerUser = (req,res) => {
-    const user = new User(req.body);
-
-    user.save((err,doc) =>{
-        if(err){
-            return res.status(422).json({
-                sucess:false,
-                message:"Registration faild,check the validation errors",
-                data:err
-            
-            });
-        }else{
-            return res.status(200).json({
-            sucess:true,
-            message:"Successfully Registered"
-            
-            });
-            
+exports.registerUser =async (req,res) => {
+    try{
+    const user =await User.create(req.body);
+    const token = jwt.sign({user},process.env.SECRETE,{expiresIn:'1h'})
+    res.status(200).json({
+        sucess:true,
+        meassage:"successfully registered!",
+        data:{
+            "token":token
         }
-    });
-} 
+    })
+
+    // user.save((err,doc) =>{
+    //     if(err){
+    //         return res.status(422).json({
+    //             sucess:false,
+    //             message:"Registration faild,check the validation errors",
+    //             data:err
+            
+    //         });
+    //     }else{
+    //         return res.status(200).json({
+    //         sucess:true,
+    //         message:"Successfully Registered"
+            
+    //         });
+}catch (error){
+    res.status(400).json({error:error.message})
+}      
+        }
+
 
 //user login
 
-exports.loginUser = (req,res) => {
-    User.findOne({email:req.body.email},(err,user) =>{
-        if(!user){
-            return res.status(404).json({
-                sucess:false,
-                message:"User email not found!"
-            });
-        }
-
-        user.comparePassword(req.body.password,(err,isMatch) =>{
-            if(!isMatch){
-                return res.status(400).json({
-                    sucess:false,
-                    message:"Password is incorrect!"
-                });
+exports.loginUser =async (req,res) => {
+    try{
+        const {username,password} =req.body
+        const user = await User.login(username,password)
+        const token = jwt.sign({user},process.env.SECRETE,{expiresIn:'1h'})
+        res.status(200).json({
+            success:true,
+            meassage:"sucessfully logged in!",
+            data:{
+                "token":token
             }
-
-            user.generateToken((err,token)=>{
-                if (err){
-                    return res.status(400).json({
-                        sucess:false,
-                        message:"unable to generate jwt key",
-                        data:err
-                    });
-                }
-
-                return res.status(200).json({
-                    sucess:true,
-                    meassage:"succcessfully Logged in!",
-                    data:{
-                        "token":token
-                    }
-                  });
-            });
-        });
-    });
+        })
+    }
+    catch (error){
+        res.status(400).json({error:error.message})
+    } 
 } 
 
 //station registration
 
-exports.registerStation = (req,res) => {
-    const station = new Station(req.body);
+exports.registerStation =async  (req,res) => {
 
-    station.save((err,doc) =>{
-        if(err){
-            return res.status(422).json({
-                sucess:false,
-                message:"Registration faild,check the validation errors",
-                data:err
-            
-            });
-        }else{
-            return res.status(200).json({
-            sucess:true,
-            message:"Successfully Registered"
-            
-            });
-            
-        }
-    });
+    try{
+        let user = await Station.create(req.body)
+
+        const token = jwt.sign({user},process.env.SECRETE,{expiresIn:'1h'})
+        res.status(200).json({
+            success:true,
+            meassage:"successfuly registered",
+            data:{
+                "token" :token
+            }
+        })
+    }catch (error){
+        res.status(400).json({error:error.message})
+    }
+
+
 } 
 
 //station login
 
-exports.loginStation = (req,res) => {
-    Station.findOne({email:req.body.email},(err,station) =>{
-        if(!station){
-            return res.status(404).json({
-                sucess:false,
-                message:"User email not found!"
-            });
-        }
+exports.loginStation = async (req,res) => {
 
-        station.comparePassword(req.body.password,(err,isMatch) =>{
-            if(!isMatch){
-                return res.status(400).json({
-                    sucess:false,
-                    message:"Password is incorrect!"
-                });
+    try{
+        const{email,password} = req.body
+
+        const user = await Station.login(email,password)
+
+        const token = jwt.sign({user},process.env.SECRETE,{expiresIn:'1h'})
+        res.status(200).json({
+            success:true,
+            message:"sucessfully logged in",
+            data:{
+                "token":token
             }
+        })
 
-            station.generateToken((err,token)=>{
-                if (err){
-                    return res.status(400).json({
-                        sucess:false,
-                        message:"unable to generate jwt key",
-                        data:err
-                    });
-                }
-
-                return res.status(200).json({
-                    sucess:true,
-                    meassage:"succcessfully Logged in!",
-                    data:{
-                        "token":token
-                    }
-                  });
-            });
-        });
-    });
-}   
+    }catch(error){
+        res.status(400).json({error:error.message})
+    }}
+    

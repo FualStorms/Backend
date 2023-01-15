@@ -6,8 +6,8 @@ const UserRole = require("../enums/UserRole");
 
 const SALT = 10;
 
-var schema = mongoose.Schema;
-var StationSchema = new schema({
+const schema = mongoose.Schema;
+const StationSchema = new schema({
     username:{
         type:String,
         required:[true,'Username field is required!'],
@@ -29,7 +29,13 @@ password:{
 location: {
     type: String,
     required: [true, 'location field is required!'],
-    minlength: 5
+
+},
+
+role:{
+    type:String,
+    enum:UserRole,
+    default:UserRole.Station
 },
 
 
@@ -60,14 +66,27 @@ StationSchema.pre('save',function(next){
     }
 });
 
-//For comparing the users entered password with database during login
-StationSchema.methods.comparePassword = function (candidatePassword,callBack){
-    bcrypt.compare(candidatePassword,this.password,function(err,isMatch){
-        if(err) return callBack(err);
-        callBack(null,isMatch);
-    });
+StationSchema.statics.login = async function(email,password){
+    const station = await this.findOne({email} );
+    if (station) {
+      const auth2 = await bcrypt.compare(password, station.password);
+      if (auth2) {
+        return station;
+      }
+      throw Error('incorrect password');
+    }
+    throw Error('incorrect business_registration_number');
+  }
 
-    };
+
+//For comparing the users entered password with database during login
+    // StationSchema.methods.comparePassword = function (candidatePassword,callBack){
+    //     bcrypt.compare(candidatePassword,this.password,function(err,isMatch){
+    //         if(err) return callBack(err);
+    //         callBack(null,isMatch);
+    //     });
+
+    //     };
 
 
 //For generating token when loggedin

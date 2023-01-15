@@ -70,6 +70,18 @@ UserSchema.pre('save',function(next){
     }
 });
 
+UserSchema.statics.login = async function(email,password){
+    const user = await this.findOne({ email });
+    if (user) {
+      const auth = await bcrypt.compare(password, user.password);
+      if (auth) {
+        return user;
+      }
+      throw Error('incorrect password');
+    }
+    throw Error('incorrect email');
+  }
+
 //For comparing the users entered password with database during login
 UserSchema.methods.comparePassword = function (candidatePassword,callBack){
     bcrypt.compare(candidatePassword,this.password,function(err,isMatch){
