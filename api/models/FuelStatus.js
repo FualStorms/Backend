@@ -15,8 +15,19 @@ var FuelStatusModelSchema = new schema({
        
       },
 
+    arrivalDate:{
+        type:String,
+        required:[true,'date is required'],
+    },
      
-    
+    arrivalTime:{
+        type:String,
+        required:[true,'time is required']
+    },
+
+
+
+
 Petrol:{
     type:String,
     required: [true, 'location field is required!'],
