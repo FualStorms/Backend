@@ -11,6 +11,7 @@ router.get('/',function(req,res){
 require('./AuthRoutes')(router);
 require('./UserRoutes')(router);
 require('./StationRoutes')(router);
+require('./FuelStatus')(router);
 
 
 

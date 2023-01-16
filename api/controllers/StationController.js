@@ -43,9 +43,11 @@ exports.Stations = async (req,res) => {
 
 
     try {
-        const stations = await User.find()
+        const stations = await Station.find()
         return res.status(200).json(stations)
     } catch (error) {
         res.status(500).json(error)
     }
 }
+
+
