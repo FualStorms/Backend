@@ -12,6 +12,7 @@ require('./AuthRoutes')(router);
 require('./UserRoutes')(router);
 require('./StationRoutes')(router);
 require('./FuelStatus')(router);
+require('./Queue')(router);
 
 
 
