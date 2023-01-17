@@ -1,5 +1,5 @@
 module.exports = function(app){
-    const {Auth} = require("../middlewares/auth");
+   
  
     const AuthController = require("../controllers/AuthController");
  
